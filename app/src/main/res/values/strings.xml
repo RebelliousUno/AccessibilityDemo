@@ -2,4 +2,5 @@
     <string name="app_name">AccessibilityDemo</string>
     <string name="good">Good</string>
     <string name="bad">Bad</string>
+    <string name="weird">Weird</string>
 </resources>

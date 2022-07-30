@@ -25,7 +25,7 @@ fun MyAppBottomBar(navController: NavHostController) {
         val currentDestination = navBackStackEntry.value?.destination
         items.forEach { screen ->
             BottomNavigationItem(
-                icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
+                icon = { Icon(screen.icon, contentDescription = null) },
                 label = { Text(stringResource(screen.resourceId)) },
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                 onClick = {
