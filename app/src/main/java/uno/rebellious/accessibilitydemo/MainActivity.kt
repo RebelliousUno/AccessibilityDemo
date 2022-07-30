@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MyAppBottomBar(navController: NavHostController) {
-    BottomNavigation() {
+    BottomNavigation {
         val navBackStackEntry = navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry.value?.destination
         items.forEach { screen ->
@@ -240,7 +240,7 @@ fun ButtonRow() {
 
 @Composable
 fun BadAccounts(accounts: Array<AccountDetails>) {
-    Column() {
+    Column {
         accounts.forEach {
             BadAccountCard(it)
         }
@@ -284,15 +284,27 @@ fun BadAccountCard(account: AccountDetails) {
     ) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Column(Modifier.padding(8.dp)) {
-                Text(text= "Sort Code", fontSize = fontSize)
+                Text(text = "Sort Code", fontSize = fontSize)
                 Text(text = "Account Number", fontSize = fontSize)
                 Text(text = "Account Name", fontSize = fontSize)
                 Text(text = "Balance", fontSize = fontSize)
             }
             Column(Modifier.padding(8.dp)) {
-                Text(modifier = Modifier.align(Alignment.End), fontSize = fontSize, text = account.sortCode)
-                Text(modifier = Modifier.align(Alignment.End), fontSize = fontSize, text = account.accountNumber)
-                Text(modifier = Modifier.align(Alignment.End), fontSize = fontSize, text = account.accountName)
+                Text(
+                    modifier = Modifier.align(Alignment.End),
+                    fontSize = fontSize,
+                    text = account.sortCode
+                )
+                Text(
+                    modifier = Modifier.align(Alignment.End),
+                    fontSize = fontSize,
+                    text = account.accountNumber
+                )
+                Text(
+                    modifier = Modifier.align(Alignment.End),
+                    fontSize = fontSize,
+                    text = account.accountName
+                )
                 Text(
                     modifier = Modifier.align(Alignment.End), fontSize = fontSize,
                     text = NumberFormat.getCurrencyInstance().format(account.balance)
