@@ -48,9 +48,7 @@ sealed class Screen(val route: String, @StringRes val resourceId: Int) {
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
-
         setContent {
             AccessibilityDemoTheme {
                 // A surface container using the 'background' color from the theme
@@ -65,100 +63,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun MyAppBottomBar(navController: NavHostController) {
-    BottomNavigation {
-        val navBackStackEntry = navController.currentBackStackEntryAsState()
-        val currentDestination = navBackStackEntry.value?.destination
-        items.forEach { screen ->
-            BottomNavigationItem(
-                icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
-                label = { Text(stringResource(screen.resourceId)) },
-                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                onClick = {
-                    navController.navigate(screen.route) {
-                        // Pop up to the start destination of the graph to
-                        // avoid building up a large stack of destinations
-                        // on the back stack as users select items
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        // Avoid multiple copies of the same destination when
-                        // reselecting the same item
-                        launchSingleTop = true
-                        // Restore state when reselecting a previously selected item
-                        restoreState = true
-                    }
-                }
-            )
-        }
-    }
-}
 
-@Composable
-fun MyTopAppBar() {
-    val openDialog = remember { mutableStateOf(false) }
-    TopAppBar(title = {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text("Accessibility Demo")
-            IconButton(
-                onClick = {
-                    openDialog.value = true
-                }) {
-                Icon(
-                    imageVector = Icons.Filled.Info,
-                    contentDescription = null,
-                    tint = Color.White
-                )
-            }
-        }
-    })
-    if (openDialog.value) {
-        AlertDialog(
-            onDismissRequest = { openDialog.value = false },
-            title = { Text("Info Alert") },
-            text = { Text("Some Info Value") },
-            confirmButton = {
-                Button(onClick = {
-                    openDialog.value = false
-                }) { Text("Confirm Button") }
-            }, dismissButton = {
-                Button(onClick = {
-                    openDialog.value = false
-                }) { Text("Cancel Button") }
-            })
-    }
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
-@Composable
-fun BadTextEntry() {
-    val username = remember {
-        mutableStateOf("")
-    }
-    TextField(
-        modifier = Modifier.padding(8.dp),
-        placeholder = { Text("Enter Text Here", fontSize = 5.em) },
-        singleLine = true,
-        value = username.value,
-        onValueChange = { username.value = it })
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
-@Composable
-fun TextEntry() {
-    val username = remember {
-        mutableStateOf("")
-    }
-    val keyboardController = LocalSoftwareKeyboardController.current
-    TextField(
-        modifier = Modifier.padding(8.dp),
-        keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
-        singleLine = true,
-        value = username.value,
-        onValueChange = { username.value = it },
-        label = { Text("Enter Text Here") })
-}
 
 @Composable
 fun BadPage() {
@@ -203,7 +108,6 @@ fun GoodPage() {
     }
 }
 
-
 @Composable
 fun Page() {
     val navController = rememberNavController()
@@ -219,119 +123,6 @@ fun Page() {
 
     }
 }
-
-@Composable
-fun BadButtonRow() {
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-        Button(modifier = Modifier.padding(8.dp), onClick = {}) { Text("One", fontSize = 5.em) }
-        Button(modifier = Modifier.padding(8.dp), onClick = {}) { Text("Two", fontSize = 5.em) }
-        Button(modifier = Modifier.padding(8.dp), onClick = {}) { Text("Three", fontSize = 5.em) }
-    }
-}
-
-@Composable
-fun ButtonRow() {
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-        Button(modifier = Modifier.padding(8.dp), onClick = {}) { Text("One") }
-        Button(modifier = Modifier.padding(8.dp), onClick = {}) { Text("Two") }
-        Button(modifier = Modifier.padding(8.dp), onClick = {}) { Text("Three") }
-    }
-}
-
-@Composable
-fun BadAccounts(accounts: Array<AccountDetails>) {
-    Column {
-        accounts.forEach {
-            BadAccountCard(it)
-        }
-    }
-}
-
-@Composable
-fun Accounts(accounts: Array<AccountDetails>) {
-    Column {
-        accounts.forEach {
-            AccountCard(it)
-        }
-    }
-}
-
-@Composable
-fun AccountRow(field: String, value: String, readIndividual: Boolean = false) {
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(field)
-        Spacer(Modifier.width(8.dp))
-        Text(
-            text = value,
-            textAlign = TextAlign.End,
-            modifier = Modifier.semantics {
-                this.text = AnnotatedString(
-                    if (readIndividual) value.map { "$it " }.toString().trim() else value
-                )
-            })
-    }
-}
-
-@Composable
-fun BadAccountCard(account: AccountDetails) {
-    val fontSize = 5.em
-    Surface(
-        shape = MaterialTheme.shapes.medium,
-        elevation = 1.dp,
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth()
-    ) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Column(Modifier.padding(8.dp)) {
-                Text(text = "Sort Code", fontSize = fontSize)
-                Text(text = "Account Number", fontSize = fontSize)
-                Text(text = "Account Name", fontSize = fontSize)
-                Text(text = "Balance", fontSize = fontSize)
-            }
-            Column(Modifier.padding(8.dp)) {
-                Text(
-                    modifier = Modifier.align(Alignment.End),
-                    fontSize = fontSize,
-                    text = account.sortCode
-                )
-                Text(
-                    modifier = Modifier.align(Alignment.End),
-                    fontSize = fontSize,
-                    text = account.accountNumber
-                )
-                Text(
-                    modifier = Modifier.align(Alignment.End),
-                    fontSize = fontSize,
-                    text = account.accountName
-                )
-                Text(
-                    modifier = Modifier.align(Alignment.End), fontSize = fontSize,
-                    text = NumberFormat.getCurrencyInstance().format(account.balance)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun AccountCard(account: AccountDetails) {
-    Surface(
-        shape = MaterialTheme.shapes.medium,
-        elevation = 1.dp,
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth()
-    ) {
-        Column(Modifier.padding(8.dp)) {
-            AccountRow("Sort Code", account.sortCode, true)
-            AccountRow("Account Number", account.accountNumber, true)
-            AccountRow("Account Name", account.accountName)
-            AccountRow("Balance", NumberFormat.getCurrencyInstance().format(account.balance))
-        }
-    }
-}
-
 
 @Preview(showBackground = true)
 @Composable
